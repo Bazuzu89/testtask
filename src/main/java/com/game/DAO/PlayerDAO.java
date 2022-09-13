@@ -11,6 +11,10 @@ public class PlayerDAO implements DAOInterface<Player> {
 
     private JpaRepository<Player, Long> repository;
 
+    public PlayerDAO(JpaRepository<Player, Long> repository) {
+        this.repository = repository;
+    }
+
     @Override
     public Player create(Player entity) {
         return repository.save(entity);

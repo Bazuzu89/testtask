@@ -1,26 +1,47 @@
 package com.game.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 @Component
 @Entity
-public class Player {
+public class Player implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    public Player(Long id, String name, String title, Race race, Profession profession, Integer experience, Integer level, Integer untilNextLevel, Date birthday, Boolean banned) {
+        this.id = id;
+        this.name = name;
+        this.title = title;
+        this.race = race;
+        this.profession = profession;
+        this.experience = experience;
+        this.level = level;
+        this.untilNextLevel = untilNextLevel;
+        this.birthday = birthday;
+        this.banned = banned;
+    }
+
+    public Player() {
+    }
 
     private String name;
     private String title;
     private Race race;
     private Profession profession;
     private Integer experience;
+    @JsonIgnore
     private Integer level;
+    @JsonIgnore
     private Integer untilNextLevel;
     private Date birthday;
     private Boolean banned;
