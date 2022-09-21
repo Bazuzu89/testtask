@@ -3,10 +3,14 @@ package com.game.service;
 import com.game.DAO.DAOInterface;
 import com.game.controller.PlayerOrder;
 import com.game.entity.*;
+import com.game.exception.InvalidPlayerParametersException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -42,16 +46,27 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player create(Player player) {
+    public Player create(Player player) throws InvalidPlayerParametersException, ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date minDate = sdf.parse("2000-01-01");
+        Date maxDate = sdf.parse("3000-12-31");
+        if (
+                (player.getName() == null || player.getName() == "" || player.getName().length() > 12)
+                || (player.getTitle() == null || player.getTitle().length() > 30)
+                        || player.getRace() == null
+                        || player.getProfession() == null
+                        || (player.getBirthday() == null
+                                || player.getBirthday().before(minDate)
+                                || player.getBirthday().after(maxDate))
+                        || (player.getExperience() == null || player.getExperience() < 0 || player.getExperience() > 10_000_000)
+        ) {
+            throw new InvalidPlayerParametersException();
+        }
         Integer experience = player.getExperience();
-        Integer level = (int) Math.round(Math.sqrt((2500 + 200 * experience) - 50) / 100);
+        Integer level = (int) Math.round((Math.sqrt(2500 + 200 * experience) - 50) / 100);
         Integer untilNextLevel = 50 * (level + 1) * (level + 2) - experience;
         player.setLevel(level);
         player.setUntilNextLevel(untilNextLevel);
-        if (!player.getProfession().name().equals(Profession.WARRIOR.name())) {
-            System.out.println(player.getProfession());
-            return null;
-        }
         return playerDao.create(player);
     }
 

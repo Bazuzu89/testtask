@@ -2,9 +2,11 @@ package com.game.service;
 
 import com.game.controller.PlayerOrder;
 import com.game.entity.*;
+import com.game.exception.InvalidPlayerParametersException;
 import org.springframework.data.domain.Page;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +16,7 @@ public interface PlayerService {
 
     Integer getCount(HttpServletRequest request);
 
-    Player create(Player player);
+    Player create(Player player) throws InvalidPlayerParametersException, ParseException;
 
     void delete(Long id);
 

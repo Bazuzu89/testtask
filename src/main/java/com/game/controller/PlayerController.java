@@ -1,6 +1,7 @@
 package com.game.controller;
 
 import com.game.entity.*;
+import com.game.exception.InvalidPlayerParametersException;
 import com.game.service.PlayerService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -49,9 +52,15 @@ public class PlayerController {
     }
 
     @PostMapping("/rest/players")
-    ResponseEntity<Player> createPlayer(@RequestParam Player player) {
-        Player playerCreated = playerService.create(player);
-        ResponseEntity<Player> response = ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(playerCreated);
+    ResponseEntity<?> createPlayer(@RequestBody Player player) {
+
+        ResponseEntity<Player> response = null;
+        try {
+            Player playerCreated = playerService.create(player);
+            response = ResponseEntity.status(HttpStatus.OK).body(playerCreated);
+        } catch (InvalidPlayerParametersException | ParseException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         return response;
     }
 
