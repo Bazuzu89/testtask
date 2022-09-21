@@ -1,11 +1,13 @@
 package com.game.service;
 
 import com.game.DAO.DAOInterface;
-import com.game.entity.Player;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.game.controller.PlayerOrder;
+import com.game.entity.*;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -16,8 +18,22 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player[] getPlayers(HttpServletRequest request) {
-        return new Player[0];
+    public Page<Player> getPlayers(String name,
+                                   String title,
+                                   Race race,
+                                   Profession profession,
+                                   Long after,
+                                   Long before,
+                                   Boolean banned,
+                                   Integer minExperience,
+                                   Integer maxExperience,
+                                   Integer minLevel,
+                                   Integer maxLevel,
+                                   PlayerOrder playerOrder,
+                                   Integer pageNumber,
+                                   Integer pageSize) {
+
+        return playerDao.getPlayers(name, title, race, profession, after, before, banned, minExperience, maxExperience, minLevel, maxLevel, playerOrder, pageNumber, pageSize);
     }
 
     @Override
@@ -32,6 +48,10 @@ public class PlayerServiceImpl implements PlayerService {
         Integer untilNextLevel = 50 * (level + 1) * (level + 2) - experience;
         player.setLevel(level);
         player.setUntilNextLevel(untilNextLevel);
+        if (!player.getProfession().name().equals(Profession.WARRIOR.name())) {
+            System.out.println(player.getProfession());
+            return null;
+        }
         return playerDao.create(player);
     }
 
@@ -47,6 +67,6 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player get(Long id) {
-        return null;
+        return playerDao.get(id);
     }
 }

@@ -1,12 +1,16 @@
 package com.game.service;
 
-import com.game.entity.Player;
+import com.game.controller.PlayerOrder;
+import com.game.entity.*;
+import org.springframework.data.domain.Page;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 public interface PlayerService {
 
-    Player[] getPlayers(HttpServletRequest request);
+    Page<Player> getPlayers(String name, String title, Race race, Profession profession, Long after, Long before, Boolean banned, Integer minExperience, Integer maxExperience, Integer minLevel, Integer maxLevel, PlayerOrder playerOrder, Integer pageNumber, Integer pageSize);
 
     Integer getCount(HttpServletRequest request);
 

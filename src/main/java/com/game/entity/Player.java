@@ -5,10 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 @Component
@@ -34,9 +31,23 @@ public class Player implements Serializable {
     public Player() {
     }
 
+
+//    public Player(String name, String title, Race race, Profession profession, Integer experience, Date birthday, Boolean banned) {
+//        this.name = name;
+//        this.title = title;
+//        this.race = race;
+//        this.profession = profession;
+//        this.experience = experience;
+//        this.birthday = birthday;
+//        this.banned = banned;
+//    }
+
+
     private String name;
     private String title;
+    @Enumerated(EnumType.STRING)
     private Race race;
+    @Enumerated(EnumType.STRING)
     private Profession profession;
     private Integer experience;
     @JsonIgnore
