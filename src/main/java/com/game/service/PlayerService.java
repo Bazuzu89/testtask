@@ -2,7 +2,9 @@ package com.game.service;
 
 import com.game.controller.PlayerOrder;
 import com.game.entity.*;
+import com.game.exception.InvalidInputException;
 import com.game.exception.InvalidPlayerParametersException;
+import com.game.exception.PlayerNotFoundException;
 import org.springframework.data.domain.Page;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,9 +20,9 @@ public interface PlayerService {
 
     Player create(Player player) throws InvalidPlayerParametersException, ParseException;
 
-    void delete(Long id);
+    void delete(Long id) throws PlayerNotFoundException, InvalidInputException;
 
     Player update(Long id);
 
-    Player get(Long id);
+    Player get(Long id) throws InvalidInputException, PlayerNotFoundException;
 }

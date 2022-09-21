@@ -3,7 +3,9 @@ package com.game.service;
 import com.game.DAO.DAOInterface;
 import com.game.controller.PlayerOrder;
 import com.game.entity.*;
+import com.game.exception.InvalidInputException;
 import com.game.exception.InvalidPlayerParametersException;
+import com.game.exception.PlayerNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -71,8 +73,11 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void delete(Long id) {
-
+    public void delete(Long id) throws PlayerNotFoundException, InvalidInputException {
+        if (id != (long) id || id <= 0) {
+            throw new InvalidInputException();
+        }
+        playerDao.delete(id);
     }
 
     @Override
@@ -81,7 +86,10 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player get(Long id) {
+    public Player get(Long id) throws InvalidInputException, PlayerNotFoundException {
+        if (id != (long) id || id <= 0) {
+            throw new InvalidInputException();
+        }
         return playerDao.get(id);
     }
 }

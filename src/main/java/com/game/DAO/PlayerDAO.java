@@ -2,13 +2,16 @@ package com.game.DAO;
 
 import com.game.controller.PlayerOrder;
 import com.game.entity.*;
+import com.game.exception.PlayerNotFoundException;
 import com.game.repository.PlayerRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Component
 public class PlayerDAO implements DAOInterface<Player> {
@@ -31,8 +34,13 @@ public class PlayerDAO implements DAOInterface<Player> {
     }
 
     @Override
-    public Player get(Long id) {
-        return repository.getOne(id);
+    public Player get(Long id) throws PlayerNotFoundException {
+        try {
+            Player player = repository.findById(id).get();
+            return player;
+        } catch (NoSuchElementException e) {
+            throw new PlayerNotFoundException();
+        }
     }
 
     @Override
@@ -41,8 +49,13 @@ public class PlayerDAO implements DAOInterface<Player> {
     }
 
     @Override
-    public void delete(Long id) {
-        repository.delete(repository.getOne(id));
+    public void delete(Long id) throws PlayerNotFoundException {
+        try {
+            Player player = repository.findById(id).get();
+            repository.delete(player);
+        } catch (NoSuchElementException e) {
+            throw new PlayerNotFoundException();
+        }
     }
 
     public Page<Player> getPlayers(String name,
