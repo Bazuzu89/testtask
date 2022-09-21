@@ -1,7 +1,9 @@
 package com.game.controller;
 
 import com.game.entity.*;
+import com.game.exception.InvalidInputException;
 import com.game.exception.InvalidPlayerParametersException;
+import com.game.exception.PlayerNotFoundException;
 import com.game.service.PlayerService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -57,7 +59,7 @@ public class PlayerController {
         ResponseEntity<Player> response = null;
         try {
             Player playerCreated = playerService.create(player);
-            response = ResponseEntity.status(HttpStatus.OK).body(playerCreated);
+            response = ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(playerCreated);
         } catch (InvalidPlayerParametersException | ParseException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -65,10 +67,17 @@ public class PlayerController {
     }
 
     @GetMapping("/rest/players/{id}")
-    ResponseEntity<Player> getPlayerById(@RequestParam Long id) {
-        Player playerFound = playerService.get(id);
-        ResponseEntity<Player> response = ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(playerFound);
-        return response;
+    ResponseEntity<Player> getPlayerById(@PathVariable Long id) {
+        Player playerFound;
+        try {
+            playerFound =  playerService.get(id);
+            ResponseEntity<Player> response = ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(playerFound);
+            return response;
+        } catch (PlayerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (InvalidInputException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @PostMapping("/rest/players/{id}")
@@ -79,8 +88,14 @@ public class PlayerController {
     }
 
     @DeleteMapping("/rest/players/{id}")
-    ResponseEntity deletePlayer(@RequestParam Long id) {
-        playerService.delete(id);
-        return null;
+    ResponseEntity<?> deletePlayer(@PathVariable Long id) {
+        try {
+            playerService.delete(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (PlayerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (InvalidInputException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }
