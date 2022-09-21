@@ -63,7 +63,7 @@ public class PlayerServiceImpl implements PlayerService {
             throw new InvalidPlayerParametersException();
         }
         Integer experience = player.getExperience();
-        Integer level = (int) Math.round(Math.sqrt((2500 + 200 * experience) - 50) / 100);
+        Integer level = (int) Math.round((Math.sqrt(2500 + 200 * experience) - 50) / 100);
         Integer untilNextLevel = 50 * (level + 1) * (level + 2) - experience;
         player.setLevel(level);
         player.setUntilNextLevel(untilNextLevel);

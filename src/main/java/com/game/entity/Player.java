@@ -50,9 +50,9 @@ public class Player implements Serializable {
     @Enumerated(EnumType.STRING)
     private Profession profession;
     private Integer experience;
-    @JsonIgnore
+
     private Integer level;
-    @JsonIgnore
+
     private Integer untilNextLevel;
     private Date birthday;
     private Boolean banned;

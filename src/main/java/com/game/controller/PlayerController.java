@@ -57,7 +57,7 @@ public class PlayerController {
         ResponseEntity<Player> response = null;
         try {
             Player playerCreated = playerService.create(player);
-            response = ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(playerCreated);
+            response = ResponseEntity.status(HttpStatus.OK).body(playerCreated);
         } catch (InvalidPlayerParametersException | ParseException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
