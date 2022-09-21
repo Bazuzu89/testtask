@@ -57,6 +57,16 @@ public class Player implements Serializable {
     private Date birthday;
     private Boolean banned;
 
+    public Player(String name, String title, Race race, Profession profession, Integer experience, Date birthday, Boolean banned) {
+        this.name = name;
+        this.title = title;
+        this.race = race;
+        this.profession = profession;
+        this.experience = experience;
+        this.birthday = birthday;
+        this.banned = banned;
+    }
+
     public Long getId() {
         return id;
     }
