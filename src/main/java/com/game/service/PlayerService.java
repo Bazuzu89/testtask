@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
 
 public interface PlayerService {
 
@@ -22,7 +20,7 @@ public interface PlayerService {
 
     void delete(Long id) throws PlayerNotFoundException, InvalidInputException;
 
-    Player update(Long id);
+    Player update(Long id, Player player) throws PlayerNotFoundException, InvalidInputException, ParseException;
 
     Player get(Long id) throws InvalidInputException, PlayerNotFoundException;
 }

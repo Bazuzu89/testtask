@@ -9,7 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityNotFoundException;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -44,8 +44,38 @@ public class PlayerDAO implements DAOInterface<Player> {
     }
 
     @Override
-    public Player update(Player entity) {
-        return repository.save(entity);
+    public Player update(Long id, Player player) throws PlayerNotFoundException {
+        try {
+            Player foundPlayer = repository.findById(id).get();
+            if (player.getName() != null && !player.getName().equals("")) {
+                foundPlayer.setName(player.getName());
+            }
+            if (player.getTitle() != null && !player.getTitle().equals("")) {
+                foundPlayer.setTitle(player.getTitle());
+            }
+            if (player.getRace() != null && player.getRace() != null) {
+                foundPlayer.setRace(player.getRace());
+            }
+            if (player.getProfession() != null && player.getProfession() != null) {
+                foundPlayer.setProfession(player.getProfession());
+            }
+            if (player.getBanned() != null && player.getBanned() != null) {
+                foundPlayer.setBanned(player.getBanned());
+            }
+            if (player.getExperience() != null) {
+                foundPlayer.setExperience(player.getExperience());
+                Integer level = (int) Math.floor((Math.sqrt(2500 + 200 * foundPlayer.getExperience()) - 50) / 100);
+                Integer untilNextLevel = 50 * (level + 1) * (level + 2) - foundPlayer.getExperience();
+                foundPlayer.setLevel(level);
+                foundPlayer.setUntilNextLevel(untilNextLevel);
+            }
+            if (player.getBirthday() != null) {
+                foundPlayer.setBirthday(player.getBirthday());
+            }
+            return repository.save(foundPlayer);
+        } catch (NoSuchElementException e) {
+            throw new PlayerNotFoundException();
+        }
     }
 
     @Override
