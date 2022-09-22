@@ -1,5 +1,8 @@
 package com.game.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.game.entity.*;
 import com.game.exception.InvalidInputException;
 import com.game.exception.InvalidPlayerParametersException;
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class PlayerController {
@@ -53,7 +57,7 @@ public class PlayerController {
         return null;
     }
 
-    @PostMapping("/rest/players")
+    @PostMapping(value = "/rest/players", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> createPlayer(@RequestBody Player player) {
 
         ResponseEntity<Player> response = null;
@@ -80,11 +84,17 @@ public class PlayerController {
         }
     }
 
-    @PostMapping("/rest/players/{id}")
-    ResponseEntity<Player> updatePlayer(@RequestParam Long id) {
-        Player playerUpdated = playerService.update(id);
-        //TODO wrap playerList in ResponseEntity
-        return null;
+    @PostMapping(value = "/rest/players/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> updatePlayer(@RequestBody Player player, @PathVariable Long id, HttpServletRequest request, HttpServletResponse resp) {
+        Player playerUpdated;
+            try {
+                playerUpdated = playerService.update(id, player);
+                return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(playerUpdated);
+            } catch (InvalidInputException | ParseException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            } catch (PlayerNotFoundException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
     }
 
     @DeleteMapping("/rest/players/{id}")
