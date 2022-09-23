@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Component
@@ -102,19 +103,27 @@ public class PlayerDAO implements DAOInterface<Player> {
                                    PlayerOrder playerOrder,
                                    Integer pageNumber,
                                    Integer pageSize) {
+        Date afterDate = null;
+        Date beforeDate = null;
+        if (after != null) {
+            afterDate = new Date(after);
+        }
+        if (before != null) {
+            beforeDate = new Date(before);
+        }
         return repository.findAll(
                 name,
                 title,
                 race,
                 profession,
-                after,
-                before,
+                afterDate,
+                beforeDate,
                 banned,
                 minExperience,
                 maxExperience,
                 minLevel,
                 maxLevel,
-                PageRequest.of(0, 20, Sort.by("id").ascending())
+                PageRequest.of(pageNumber, pageSize, Sort.by(playerOrder.name().toLowerCase()).ascending())
         );
     }
 }

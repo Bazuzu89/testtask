@@ -14,7 +14,7 @@ public interface PlayerService {
 
     Page<Player> getPlayers(String name, String title, Race race, Profession profession, Long after, Long before, Boolean banned, Integer minExperience, Integer maxExperience, Integer minLevel, Integer maxLevel, PlayerOrder playerOrder, Integer pageNumber, Integer pageSize);
 
-    Integer getCount(HttpServletRequest request);
+    Integer getCount(String name, String title, Race race, Profession profession, Long after, Long before, Boolean banned, Integer minExperience, Integer maxExperience, Integer minLevel, Integer maxLevel);
 
     Player create(Player player) throws InvalidPlayerParametersException, ParseException;
 
