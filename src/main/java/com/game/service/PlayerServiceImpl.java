@@ -37,13 +37,22 @@ public class PlayerServiceImpl implements PlayerService {
                                    PlayerOrder playerOrder,
                                    Integer pageNumber,
                                    Integer pageSize) {
-
+        if (playerOrder == null) {
+            playerOrder = PlayerOrder.ID;
+        }
+        if (pageNumber == null) {
+            pageNumber = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 3;
+        }
         return playerDao.getPlayers(name, title, race, profession, after, before, banned, minExperience, maxExperience, minLevel, maxLevel, playerOrder, pageNumber, pageSize);
     }
 
     @Override
-    public Integer getCount(HttpServletRequest request) {
-        return null;
+    public Integer getCount(String name, String title, Race race, Profession profession, Long after, Long before, Boolean banned, Integer minExperience, Integer maxExperience, Integer minLevel, Integer maxLevel) {
+        Integer count = (int) getPlayers(name, title, race, profession, after, before, banned, minExperience, maxExperience, minLevel, maxLevel, null, null, null).getTotalElements();
+        return count;
     }
 
     @Override

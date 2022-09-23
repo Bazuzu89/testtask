@@ -51,10 +51,21 @@ public class PlayerController {
     }
 
     @GetMapping("/rest/players/count")
-    ResponseEntity<Integer> getPlayersCount(HttpServletRequest request, HttpServletResponse  response) {
-        Integer count = playerService.getCount(request);
-        //TODO wrap playerList in ResponseEntity
-        return null;
+    ResponseEntity<Integer> getPlayersCount(@RequestParam(value = "name", defaultValue = "") String name,
+                                            @RequestParam(value = "title", defaultValue = "") String title,
+                                            @RequestParam(value = "race", defaultValue = "") Race race,
+                                            @RequestParam(value = "profession", defaultValue = "") Profession profession,
+                                            @RequestParam(value = "after", defaultValue = "") Long after,
+                                            @RequestParam(value = "before", defaultValue = "") Long before,
+                                            @RequestParam(value = "banned", defaultValue = "") Boolean banned,
+                                            @RequestParam(value = "minExperience", defaultValue = "") Integer minExperience,
+                                            @RequestParam(value = "maxExperience", defaultValue = "") Integer maxExperience,
+                                            @RequestParam(value = "minLevel", defaultValue = "") Integer minLevel,
+                                            @RequestParam(value = "maxLevel", defaultValue = "") Integer maxLevel
+                                           ) {
+        Integer count = playerService.getCount(name, title, race, profession, after, before, banned, minExperience, maxExperience, minLevel, maxLevel);
+
+        return ResponseEntity.status(HttpStatus.OK).body(count);
     }
 
     @PostMapping(value = "/rest/players", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
